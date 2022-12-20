@@ -12,84 +12,123 @@ import {AuthContext} from '../providers/auth';
 export default function ContentToday(){
     const {token} = React.useContext(AuthContext);
     const [nameWeekDay, setNameWeekDay] = useState('');
+    const [monthNumber, setMonthNumber] = useState('');
+    const [listHabits, setListHabits] = useState([]);
     let weekday = dayjs().day();
+    let month = dayjs().month();
+
+    const config = {
+        headers: {
+            "Authorization": `Bearer ${token.token}`
+        }
+    }
 
     useEffect(() => {
-        const config = {
-            headers: {
-                "Authorization": `Bearer ${token.token}`
-            }
-        }
         const promise = axios.get(`${urlBase_habits}/today`, config);
-        promise.then(answer => {console.log(answer.data)});
+        promise.then(answer => {setListHabits(answer.data)});
         promise.catch(error => {alert(`${error.response.data.message}`)});
 
         switch(weekday){
-        case 0:
-            setNameWeekDay('Domingo');
-        break;
+            case 0:
+                setNameWeekDay('Domingo');
+            break;
 
-        case 1:
-            setNameWeekDay('Segunda');
-        break;
+            case 1:
+                setNameWeekDay('Segunda');
+            break;
 
-        case 2:
-            setNameWeekDay('Terça');
-        break;
+            case 2:
+                setNameWeekDay('Terça');
+            break;
 
-        case 3:
-            setNameWeekDay('Quarta');
-        break;
+            case 3:
+                setNameWeekDay('Quarta');
+            break;
 
-        case 4:
-            setNameWeekDay('Quinta');
-        break;
+            case 4:
+                setNameWeekDay('Quinta');
+            break;
 
-        case 5:
-            setNameWeekDay('Sexta');
-        break;
+            case 5:
+                setNameWeekDay('Sexta');
+            break;
 
-        case 6:
-            setNameWeekDay('Sábado');
-        break;
-    }
+            case 6:
+                setNameWeekDay('Sábado');
+            break;
+        }
+
+        switch(month){
+            case 0:
+                setMonthNumber('01');
+            break;
+
+            case 1:
+                setMonthNumber('02');
+            break;
+
+            case 2:
+                setMonthNumber('03');
+            break;
+
+            case 3:
+                setMonthNumber('04');
+            break;
+
+            case 4:
+                setMonthNumber('05');
+            break;
+
+            case 5:
+                setMonthNumber('06');
+            break;
+
+            case 6:
+                setMonthNumber('07');
+            break;
+
+            case 7:
+                setMonthNumber('08');
+            break;
+
+            case 8:
+                setMonthNumber('09');
+            break;
+
+            case 9:
+                setMonthNumber('10');
+            break;
+
+            case 10:
+                setMonthNumber('11');
+            break;
+
+            case 11:
+                setMonthNumber('12');
+            break;
+        }
+
     }, []);
 
     return(
         <StyledContentToday>
             <HeaderAccess />
             <StyledDivDay>
-                <h4>{nameWeekDay}, {dayjs().date()}/{dayjs().month() + 1}</h4>
+                <h4>{nameWeekDay}, {dayjs().date()}/{monthNumber}</h4>
                 <p>Nenhum hábito concluído ainda</p>
             </StyledDivDay>
             <StyledContentHabit>
 
-                <StyledDivHabit>
-                    <StyledHabitInfo>
-                        <h4>Ler 1 Capítulo de Livro</h4>
-                        <p>Sequência atual: 3 dias</p>
-                        <p>Seu recorde: 5 dias</p>
-                    </StyledHabitInfo>
-                    <StyledCheckImage src={uncheck} />
-                </StyledDivHabit>
-
-                <StyledDivHabit>
-                    <StyledHabitInfo>
-                        <h4>Ler 1 Capítulo de Livro</h4>
-                        <p>Sequência atual: 3 dias</p>
-                        <p>Seu recorde: 5 dias</p>
-                    </StyledHabitInfo>
-                    <StyledCheckImage src={uncheck} />
-                </StyledDivHabit>
-
-                <StyledDivHabit>
-                    <StyledHabitInfo>
-                        <h4>Ler 1 Capítulo de Livro</h4>
-                        <p>Sequência atual: 3 dias</p>
-                        <p>Seu recorde: 5 dias</p>
-                    </StyledHabitInfo>
-                    <StyledCheckImage src={uncheck} />
-                </StyledDivHabit>
+                {listHabits.map((habit) => {
+                    <StyledDivHabit>
+                        <StyledHabitInfo>
+                            <h4>{habit.name}</h4>
+                            <p>Sequência atual: {habit.currentSequence}</p>
+                            <p>Seu recorde: {habit.highestSequence}</p>
+                        </StyledHabitInfo>
+                        <StyledCheckImage src={!habit.done && uncheck || habit.done && check} />
+                    </StyledDivHabit>
+                })}
 
             </StyledContentHabit>
 

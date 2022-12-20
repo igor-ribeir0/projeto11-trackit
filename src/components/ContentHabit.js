@@ -14,17 +14,19 @@ export default function ContentHabit(){
     const days = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
     const {token} = React.useContext(AuthContext);
     const [listHabits, setListHabits] = useState([]);
-    const [newArray, setNewArray] = useState([]);
     const [selectedDays, setSelectedDays] = useState([]);
+    const [newArray, setNewArray] = useState([]);
+
+    const config = {
+        headers: {
+            "Authorization": `Bearer ${token.token}`
+        }
+    }
 
     useEffect(() => {
-        const config = {
-            headers: {
-                "Authorization": `Bearer ${token.token}`
-            }
-        }
         const promise = axios.get(`${urlBase_habits}`, config);
-        promise.then(answer => {setNewArray(answer.data)});
+        promise.then(answer => {setListHabits(answer.data)});
+        promise.then(answer => console.log(listHabits));
         promise.catch(error => alert(`${error.response.data.message}`));
     }, []);
 
@@ -32,17 +34,16 @@ export default function ContentHabit(){
         setAppear(true);
     }
 
-    function saveHabit(event){
-        event.preventDefault();
+    function saveHabit(){
         const promise = axios.post(`${urlBase_habits}`, {
             name: habitName,
             days: selectedDays
-        });
-        promise.then(answer => {console.log(answer.data)});
+        }, config);
+        promise.then(answer => {setNewArray(answer.data)});
         promise.catch(error => alert(`${error.response.data.message}`));
         setSelectedDays([]);
+        setListHabits([...listHabits, newArray]);
         setHabitName('');
-        setListHabits(newArray);
         setAppear(false);
     }
 
@@ -58,6 +59,10 @@ export default function ContentHabit(){
         else{
             setSelectedDays([...selectedDays, day]);
         }
+    }
+
+    function cancelHabit(){
+        setAppear(false);
     }
 
     return (
@@ -92,7 +97,7 @@ export default function ContentHabit(){
                         </StyledDivDays>
 
                         <StyledDivConfirmButton>
-                            <p>Cancelar</p>
+                            <p onClick={cancelHabit}>Cancelar</p>
                             <StyledSaveButton onClick={saveHabit}>Salvar</StyledSaveButton>
                         </StyledDivConfirmButton>
 
@@ -119,7 +124,7 @@ export default function ContentHabit(){
 
             </StyledMainCreatedHabits>
 
-            <StyledStatusHabit verify={newArray.length !== 0}>
+            <StyledStatusHabit verify={listHabits.length !== 0}>
                 <p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>
             </StyledStatusHabit>
 
@@ -256,7 +261,7 @@ margin-top: 29px;
 
 const StyledMainCreatedHabits = styled.main`
 width: 100%;
-display: none;
+display: flex;
 flex-direction: column;
 justify-content: center;
 align-items: center;
