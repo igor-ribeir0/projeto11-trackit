@@ -26,7 +26,7 @@ export default function ContentHabit(){
     useEffect(() => {
         const promise = axios.get(`${urlBase_habits}`, config);
         promise.then(answer => {setListHabits(answer.data)});
-        promise.then(answer => console.log(listHabits));
+        promise.then(console.log(listHabits));
         promise.catch(error => alert(`${error.response.data.message}`));
     }, []);
 
@@ -42,7 +42,7 @@ export default function ContentHabit(){
         promise.then(answer => {setNewArray(answer.data)});
         promise.catch(error => alert(`${error.response.data.message}`));
         setSelectedDays([]);
-        setListHabits([...listHabits, newArray]);
+        setListHabits(...listHabits, newArray);
         setHabitName('');
         setAppear(false);
     }
