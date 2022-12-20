@@ -1,10 +1,11 @@
-import ContentRegister from '../ContentRegister';
+import ContentToday from '../ContentToday';
 import styled from 'styled-components';
 
-export default function RegisterPage(){
+export default function TodayPage(props){
+    const {profilePhoto} = props;
     return(
         <StyledMain>
-            <ContentRegister />
+            <ContentToday profilePhoto={profilePhoto}/>
         </StyledMain>
     );
 }
@@ -14,5 +15,5 @@ width: 100%;
 display: flex;
 justify-content: center;
 align-items: center;
-background-color: #E5E5E5;
+background-color: #FFFFFF;
 `

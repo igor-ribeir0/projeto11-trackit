@@ -8,7 +8,6 @@ flex-direction: column;
 justify-content: center;
 align-items: center;
 background-color: #FFFFFF;
-margin-top: 30px;
 `
 export const StyledInputDiv = styled.div`
 width: 100%;

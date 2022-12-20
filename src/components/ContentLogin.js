@@ -1,16 +1,19 @@
 import Logo from '../styles/constants/Logo';
 import {Link, useNavigate} from 'react-router-dom';
-import {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
 import {urlBase} from '../styles/constants/Links';
 import {ThreeDots} from 'react-loader-spinner';
 import {StyledContent, StyledInputDiv, StyledInput, StyledButton, StyledLink, StyledLoadingDiv} from '../styles/constants/StyledsComponents';
+import {AuthContext} from '../providers/auth';
 
 export default function ContentLogin(){
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [notReleased, setNotReleased] = useState(false);
     const navigate = useNavigate();
+    const {setUser} = React.useContext(AuthContext);
+    const {setToken} = React.useContext(AuthContext);
 
     function login(event){
         event.preventDefault();
@@ -19,6 +22,8 @@ export default function ContentLogin(){
             password: password
         });
         promise.then(sucessLogin);
+        promise.then(answer => setUser({image: answer.data.image}));
+        promise.then(answer => setToken({token: answer.data.token}));
         promise.catch(error => {alert(`${error.response.data.message}`)});
     }
 
