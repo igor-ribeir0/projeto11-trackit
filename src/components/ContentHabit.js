@@ -41,8 +41,8 @@ export default function ContentHabit(){
         }, config);
         promise.then(answer => {setNewArray(answer.data)});
         promise.catch(error => alert(`${error.response.data.message}`));
-        setSelectedDays([]);
         setListHabits(...listHabits, newArray);
+        setSelectedDays([]);
         setHabitName('');
         setAppear(false);
     }
@@ -63,6 +63,17 @@ export default function ContentHabit(){
 
     function cancelHabit(){
         setAppear(false);
+    }
+
+    function deleteHabit(id){
+        if(window.confirm('Deletar hábito?')){
+            const promise = axios.delete(`${urlBase_habits}/${id}`, {
+                headers: {
+                    "Authorization": `Bearer ${token.token}`
+                }
+            });
+            setListHabits(listHabits);
+        }
     }
 
     return (
@@ -107,19 +118,21 @@ export default function ContentHabit(){
             <StyledMainCreatedHabits>
 
                 {listHabits.map((habit) => {
-                    <StyledDivCreatedHabit>
-                        <StyledTitleHabit>
-                            <h3>{habit.name}</h3>
-                            <img src={trash} />
-                        </StyledTitleHabit>
+                    return(
+                        <StyledDivCreatedHabit key={habit.id}>
+                            <StyledTitleHabit>
+                                <h3>{habit.name}</h3>
+                                <img onClick={() => deleteHabit(habit.id)}src={trash} />
+                            </StyledTitleHabit>
 
-                        <div>
-                            {days.map((days,i) => 
-                            <StyledButton key={i}>
-                                {days}
-                            </StyledButton>)}
-                        </div>
-                    </StyledDivCreatedHabit>
+                            <div>
+                                {days.map((days,i) => 
+                                <StyledButton key={i}>
+                                    {days}
+                                </StyledButton>)}
+                            </div>
+                        </StyledDivCreatedHabit>
+                    );
                 })}
 
             </StyledMainCreatedHabits>
@@ -147,7 +160,7 @@ width: 100%;
 display: flex;
 justify-content: space-between;
 align-items: center;
-margin-top: -150px;
+margin-top: 50px;
 margin-bottom: 28px;
     h3{
         width: 148px;

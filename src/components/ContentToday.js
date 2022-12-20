@@ -120,14 +120,16 @@ export default function ContentToday(){
             <StyledContentHabit>
 
                 {listHabits.map((habit) => {
-                    <StyledDivHabit>
-                        <StyledHabitInfo>
-                            <h4>{habit.name}</h4>
-                            <p>Sequência atual: {habit.currentSequence}</p>
-                            <p>Seu recorde: {habit.highestSequence}</p>
-                        </StyledHabitInfo>
-                        <StyledCheckImage src={!habit.done && uncheck || habit.done && check} />
-                    </StyledDivHabit>
+                    return(
+                        <StyledDivHabit key={habit.id}>
+                            <StyledHabitInfo>
+                                <h4>{habit.name}</h4>
+                                <p>Sequência atual: {habit.currentSequence}</p>
+                                <p>Seu recorde: {habit.highestSequence}</p>
+                            </StyledHabitInfo>
+                            <StyledCheckImage src={!habit.done && uncheck || habit.done && check} />
+                        </StyledDivHabit>
+                    );
                 })}
 
             </StyledContentHabit>
