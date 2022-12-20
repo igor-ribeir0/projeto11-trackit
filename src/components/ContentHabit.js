@@ -16,6 +16,7 @@ export default function ContentHabit(){
     const [listHabits, setListHabits] = useState([]);
     const [selectedDays, setSelectedDays] = useState([]);
     const [newArray, setNewArray] = useState([]);
+    const [refresh, setRefresh] = useState(true)
 
     const config = {
         headers: {
@@ -28,7 +29,7 @@ export default function ContentHabit(){
         promise.then(answer => {setListHabits(answer.data)});
         promise.then(console.log(listHabits));
         promise.catch(error => alert(`${error.response.data.message}`));
-    }, []);
+    }, [refresh]);
 
     function addHabit(){
         setAppear(true);
@@ -39,12 +40,13 @@ export default function ContentHabit(){
             name: habitName,
             days: selectedDays
         }, config);
-        promise.then(answer => {setNewArray(answer.data)});
+        promise.then(answer => {setNewArray([...listHabits, answer.data])});
         promise.catch(error => alert(`${error.response.data.message}`));
-        setListHabits(...listHabits, newArray);
+        setListHabits(newArray);
         setSelectedDays([]);
         setHabitName('');
         setAppear(false);
+        setRefresh(!refresh);
     }
 
     function selectDay(day){
@@ -72,7 +74,8 @@ export default function ContentHabit(){
                     "Authorization": `Bearer ${token.token}`
                 }
             });
-            setListHabits(listHabits);
+            setListHabits([...listHabits]);
+            setRefresh(!refresh);
         }
     }
 
